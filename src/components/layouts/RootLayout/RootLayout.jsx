@@ -4,13 +4,16 @@ import { Box, Grid } from "@mui/material";
 export default function RootLayout() {
   return (
     <Grid
-      component={"div"}
-      height={"100vh"}
-      bgcolor={"grey"}
+      component="div"
+      height="100vh"
+      sx={{
+        
+         background:"linear-gradient(to bottom,lightgrey,white,darkgrey)"
+      }}
     >
       <Nav home={"home"} about={"about"} />
 
-      <Box display="flex">
+      <Box >
         <Outlet />
       </Box>
     </Grid>
