@@ -7,12 +7,12 @@ export default function Nav() {
       container
       component={"nav"}
       alignItems={"center"}
-      justifyContent={"space-around"}
+      justifyContent={"space-between"}
       width={"100%"}
       height={"25%"}
       marginBottom={"15px"}
     >
-      <Grid item>
+      <Grid item >
         <Logo />
       </Grid>
       <Grid item>

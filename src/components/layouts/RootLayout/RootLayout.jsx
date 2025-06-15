@@ -6,9 +6,11 @@ export default function RootLayout() {
     <Grid
       component="div"
       height="100vh"
+      paddingRight={"17px"}
+      paddingLeft={"17px"}
       sx={{
         
-         background:"linear-gradient(to bottom,lightgrey,white,darkgrey)"
+         background:"linear-gradient(to bottom,lightgrey,grey,darkgrey)"
       }}
     >
       <Nav home={"home"} about={"about"} />

@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 import GlassyMicIcon from "./GlassyMicIcon.jsx";
 export default function () {
@@ -16,7 +17,7 @@ export default function () {
       </Typography>
       <Box width={"content-fit"} height={"content-fit"}>
         <Button variant="contained" color="primary" size="large">
-          recorder
+        <NavLink to={"recorder"}>  recorder  </NavLink>
         </Button>
       </Box>
     </Box>

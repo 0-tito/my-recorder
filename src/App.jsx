@@ -7,17 +7,23 @@ import {
 
 import "./App.css";
 
+// components
+import About from "./components/aboutPage/about.jsx";
+import Home from "./components/homePage/Home.jsx";
+import Recorder from "./components/RecorderPage/Recorder.jsx";
 
 // layouts
 import RootLayout from "./components/layouts/RootLayout/RootLayout.jsx";
-import About from "./components/aboutPage/about.jsx";
-import Home from "./components/homePage/Home.jsx";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />} >
       <Route index  element={<About />}/>
-      <Route path="/home" element={<Home />} />
+      <Route path="home" element={<Home />} />
+      <Route path="recorder" element={<Recorder />} >  
+
+      </Route>
     </Route>
   )
 );
