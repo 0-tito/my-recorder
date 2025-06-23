@@ -6,32 +6,35 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+// hooks
+import { useState } from "react";
 
 // components
-import About from "./components/aboutPage/about.jsx";
-import Home from "./components/homePage/Home.jsx";
-import Recorder from "./components/RecorderPage/Recorder.jsx";
+import About from "./components/aboutPageComponents/about.jsx";
 
 // layouts
-import RootLayout from "./components/layouts/RootLayout/RootLayout.jsx";
+import RootLayout from "./layouts/RootLayout.jsx";
+import RecorderLayout from "./layouts/recorderLayout.jsx";
+import HomeLayout from "./layouts/HomeLayout.jsx";
 
+import RecorderContextProvider from "./store/recorder-context.jsx";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<RootLayout />} >
-      <Route index  element={<About />}/>
-      <Route path="home" element={<Home />} />
-      <Route path="recorder" element={<Recorder />} >  
-
-      </Route>
-    </Route>
-  )
-);
 function App() {
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<RootLayout />}>
+        <Route index element={<About />} />
+        <Route path="home" element={<HomeLayout />}  />
+         <Route  path="recorder" element={ <RecorderLayout /> } />
+      </Route>
+    )
+  );
+
   return (
-    <>
+    <RecorderContextProvider>
       <RouterProvider router={router} />
-    </>
+    </RecorderContextProvider>
   );
 }
 

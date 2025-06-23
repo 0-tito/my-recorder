@@ -1,8 +1,7 @@
  import { Typography } from "@mui/material";
 
 export default function AnimatedTitle({text,weight,size,wavy}) {
-
-<Typography
+ return <Typography
   sx={{
     fontSize: `${size}`,
     fontFamily: "Verdana, Geneva, sans-serif",
