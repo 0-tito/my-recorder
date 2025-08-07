@@ -6,7 +6,7 @@ export default function() {
     fontSize: "1.3rem",
     fontStyle: "italic",
     fontWeight: 700,
-    color: "black",
+    color: "white",
     textShadow: "0 4px 8px rgba(0, 0, 0, 0.6)",
     backdropFilter: "blur(12px)",
     background: "rgba(255, 255, 255, 0.05)",
