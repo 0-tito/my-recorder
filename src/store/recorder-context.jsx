@@ -2,7 +2,7 @@ import { useState,useRef, useReducer } from "react";
 import { createContext } from "react";
 
 export const RecorderContext = createContext({
-    urls : [],
+    recordings: [],
     onRecordingState:{},
     setRecordings: () => {},
     handleStartRecording: () => {},
@@ -53,9 +53,9 @@ export default function RecorderContextProvider({ children}) {
   })
 
 
-  let [recordings, setRecordings] = useState({ urls: [] });
+  let [recordings, setRecordings] = useState([]);
 
-    let recorderRef = useRef(); 
+  let recorderRef = useRef(); 
 
  const handleStartRecording = () => {
       if (recorderRef.current)  recorderRef.current.start(); 
@@ -90,7 +90,7 @@ export default function RecorderContextProvider({ children}) {
   };
 
  const ctxValue = {
-    urls : recordings.urls,
+    recordings,
     onRecordingState,
     recorderRef, 
     setRecordings,
@@ -98,9 +98,9 @@ export default function RecorderContextProvider({ children}) {
     handlePauseRecording,
     handleResumeRecording,
     handleStopRecording,
- }
+ };
 
  return <RecorderContext.Provider  value={ctxValue}>
     {children}
  </RecorderContext.Provider>
-}
+} 

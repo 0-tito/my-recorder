@@ -5,23 +5,24 @@ export class RecorderClass {
     this.stream = stream;
     this.onRecordingComplete = onRecordingComplete;
     this.mediaRecorder = createMediaRecorder(stream);
-    this.chunk = [];
+    this.chunks = [];
+    this.Start = 0
 
     // Event: called when data is available during recording
     this.mediaRecorder.ondataavailable = (e) => {
-      if (e.data && e.data.size > 0) {
-        console.log("ondataavailable", e.data);
-        this.chunk.push(e.data);
+      if (e.data && e.data.size > 0){
+        this.chunks.push(e.data);
       }
     };
 
 
     // Event: called when recording is stopped
     this.mediaRecorder.onstop = () => {
-      const blob = new Blob(this.chunk, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
-      this.onRecordingComplete(url);
-      this.chunk = []; // clear chunks
+      const now = Date.now() 
+      const duration = this.Start ? Math.floor((now - this.Start) / 1000) : 0; // in seconds
+      const blob = new Blob(this.chunks, { type: "audio/webm" });
+      this.onRecordingComplete(blob, duration);
+      this.chunks = []; // clear 
     };
   }
 
@@ -33,14 +34,13 @@ export class RecorderClass {
       this.mediaRecorder.state !== "paused"
     ) {
       this.mediaRecorder.start();
-      console.log(this.mediaRecorder.state);
+      this.Start = Date.now()
     }
   }
   // method: end recording
   stop() {
     if (this.mediaRecorder.state === "recording") {
       this.mediaRecorder.stop();
-      console.log(this.mediaRecorder.state);
     }
   }
   pause(){
