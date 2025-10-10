@@ -5,16 +5,17 @@ import AudioPlayer from "../components/RecorderPageComponents/AudioPlayer.jsx";
 
 
 export default function RecorderLayout() {
+
   return (
     <Box
       component={"section"}
       display={"flex"}
       flexDirection={"column"}
       gap={"1rem"}
-       height={"auto"}
+       height={"100vh"}
     >
       <Recorder />
-      <AudioPlayer  />
+       <AudioPlayer  />
     </Box>
   );
 }
