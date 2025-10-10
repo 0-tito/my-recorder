@@ -10,7 +10,7 @@ export default function HomeLayout() {
       gap={"2rem"}
       height={"100vh"}
       sx={{
-        backgroundColor: 'transparent',
+        backgroundColor:'transparent',
         position:"relative",
       }}
     >

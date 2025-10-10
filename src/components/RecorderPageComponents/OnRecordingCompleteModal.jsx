@@ -8,34 +8,23 @@ import {
 } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { RecorderContext } from "../../store/recorder-context";
-import blobToBase64 from "../../utilities/blobToBase64";
+import saveAudioData from "../../ipfs/saveAudioData";
 
 export default function OnRecordingCompleteModal({
   setOpen,
   open,
-  url,
   blob,
   duration,
 }) {
   const { setRecordings, recordings } = useContext(RecorderContext);
-  let [name, setName] = useState(undefined);
-
+  let [name, setName] = useState("");
+  
   async function handleSave() {
     const id = Math.random();
     try {
-      const base64Url = await blobToBase64(blob); //convert blob to base64
-      console.log(base64Url);
-
-      setRecordings((prev) => [
-        ...prev,
-        {
-          url,
-          base64Url,
-          name,
-          id,
-          duration,
-        },
-      ]);
+      const date = Date.now()
+      const audios = await saveAudioData({ name, duration, id, date}, blob)
+      setRecordings(audios);
       setOpen(false);
       setName("");
     } catch (error) {
@@ -43,20 +32,21 @@ export default function OnRecordingCompleteModal({
     }
   }
 
-  useEffect(() => {
-    if (recordings.length < 1) return;
-    const existing = JSON.parse(localStorage.getItem(`recordings`)) || [];
-    const merged = [...existing, ...recordings].filter(
-      (item, index, self) => index === self.findIndex((r) => r.id === item.id)
-    );
+    useEffect(() => {
+      if (!recordings || recordings.length < 1) return;
+      const existing = JSON.parse(localStorage.getItem(`recordings`)) || [];
+      const merged = [...existing, ...recordings].filter(
+        (item, index, self) => index === self.findIndex((r) => r.id === item.id)
+      );
 
-    localStorage.setItem("recordings", JSON.stringify(merged));
-  }, [recordings]);
+      localStorage.setItem("recordings", JSON.stringify(merged));
+    }, [recordings]);
 
   function handleClose() {
     setOpen(false);
-    setName(undefined);
+    setName("");
   }
+  
   return (
     <>
       <Dialog onClose={handleClose} open={open}>

@@ -27,6 +27,7 @@ export default function AudioPlayerContextProvider({ children }) {
   });
 
   let audioRef = useRef(new Audio());
+
  const handleNext = useCallback(
     function handleNext() {
       if (!audioRef.current && recordings.length < 1) return;
@@ -38,10 +39,10 @@ export default function AudioPlayerContextProvider({ children }) {
       if (nextIndex >= recordings.length) return;
 
       const nextAudio = recordings[nextIndex];
+      console.log(audioRef.current.src)
       audioRef.current.src = nextAudio.url;
 
-      audioRef.current
-        .play()
+      audioRef.current.play()
         .then(() => {
           setAudioPlayerState((prev) => {
             return {
@@ -98,7 +99,7 @@ export default function AudioPlayerContextProvider({ children }) {
 
     const isSameAudio = audioPlayerState.currentId === id;
 
-    //resume play,after audio after was paused
+    //resume play,after audio was paused
     if (isSameAudio) {
       audioRef.current
         .play()
@@ -123,7 +124,7 @@ export default function AudioPlayerContextProvider({ children }) {
       audioRef.current.src = url;
       audioRef.current
         .play()
-        .then(() => {
+      .then(() => {
           setAudioPlayerState({
             isPlaying: true,
             currentTime: 0,

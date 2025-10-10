@@ -1,9 +1,9 @@
 import { useContext, useEffect } from "react";
-import { Button, Box, Typography, Slider } from "@mui/material";
 import { RecorderContext } from "../../store/recorder-context";
 import { AudioPlayerContext } from "../../store/audioPlayer-context";
-import formatTime from "../../config/formatTime.js";
-import base64ToBlob from "../../utilities/base64ToBlob.js";
+import { initHelia } from "../../ipfs/heliaService";
+import { getAllAudiosFromHelia } from "../../ipfs/saveAudioData";
+import AudioItem from "./AudioItem.jsx";
 
 export default function AudioPlayer() {
   const { onRecordingState, recordings,setRecordings } = useContext(RecorderContext);
@@ -12,23 +12,23 @@ export default function AudioPlayer() {
 
   let status = "";
 
-  //populate state with recordings from localstorage
+  //populate state with recordings from IPFS
 useEffect(() => {
-  const existingAudios = JSON.parse(localStorage.getItem(`recordings`)) || []
-  // create new url for each audio blob stored in local storage
-  let audioUrls = []
- const updated = existingAudios.map((el) => {
-   const url = URL.createObjectURL(base64ToBlob(el.base64Url));
-  audioUrls.push(url)
-   return {...el,url}
-  })
-  setRecordings(updated)
-
-  return () => {
-     audioUrls.forEach((url) => {
-      URL.revokeObjectURL(url)
-     })
+  async function getExistingAudios(){
+    const { helia } = await initHelia()
+  const existingAudiosCid = JSON.parse(localStorage.getItem("existingAudiosCid")) || []
+  const existingAudos = await getAllAudiosFromHelia(existingAudiosCid,helia)
+  await existingAudos.filter((a,b) =>  b.date - a.date)
+  let   audiosState = []
+  for (let index = -3; index < existingAudos.length[0]; index++) {
+    const element = existingAudos[index];
+    audiosState.push(element)
+  } 
+  console.log(audiosState)
+  setRecordings(audiosState)
   }
+
+  getExistingAudios()
 },[])
 
   // status rendering logic
@@ -44,74 +44,22 @@ useEffect(() => {
 
   return (
     <>
-      {recordings &&
-        recordings.map(({ url, name, id, duration }) => {
+      {recordings && recordings.map(({ url, name, id, duration,date }) => {
           return (
-            <Box key={id} width={"100%"}>
-              <Typography variant="h6" color="textSecondary">
-                {name}
-              </Typography>
-              <Typography>
-                {audioPlayerState.currentId === id ? status : ""}
-              </Typography>
-              <Slider
-                sx={{
-                  width: `20%`,
-                }}
-                type="range"
-                max={duration}
-                value={
-                  audioPlayerState.currentId === id
-                    ? audioPlayerState.currentTime
-                    : 0
-                }
-                step={0.1}
-                onChange={(e) => handleSeek(e, id)}
-              />
-
-              <Box display={'flex'} gap={9}>
-                {" "}
-                <Typography alignSelf={'center'}>
-                  {duration
-                    ? `${formatTime(
-                        audioPlayerState.currentId === id
-                          ? audioPlayerState.currentTime
-                          : 0
-                      )}/${formatTime(duration)}`
-                    : "loading"}
-                </Typography>
-                {audioPlayerState.isPlaying &&
-                audioPlayerState.currentId === id ? (
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      handlePause(id);
-                    }}
-                  >
-                    PAUSE
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    disabled={onRecordingState.recording}
-                    sx={{
-                      transition: "all 0.3s ease",
-                      opacity: onRecordingState.recording ? 0.5 : 1,
-                      pointerEvents: onRecordingState.recording
-                        ? "none"
-                        : "auto",
-                    }}
-                    onClick={(e) => {
-                      onRecordingState.recording
-                        ? e.preventDefault()
-                        : handlePlay(id, url);
-                    }}
-                  >
-                    PLAY
-                  </Button>
-                )}{" "}
-              </Box>
-            </Box>
+            <AudioItem 
+            key={id}
+              url={url}
+              name={name}
+              id={id}
+              date={date}
+              duration={duration}
+              audioPlayerState={audioPlayerState}
+              onRecordingState={onRecordingState}
+              status={status}
+              handleSeek={handleSeek}
+              handlePause={handlePause}
+              handlePlay={handlePlay}
+            />
           );
         })}
     </>

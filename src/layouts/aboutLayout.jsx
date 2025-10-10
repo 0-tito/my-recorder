@@ -4,7 +4,6 @@ import  MiniPlaybackControls from "../components/reuseableComponents/MiniPlaybac
 export default function AboutLayout(){
   return  <Box  width={"50%"} margin={"auto"}   height={"100vh"} >
         <About />
-
     < MiniPlaybackControls />
     </Box>
 }
